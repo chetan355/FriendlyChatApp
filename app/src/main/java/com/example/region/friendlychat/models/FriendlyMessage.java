@@ -1,37 +1,46 @@
 package com.example.region.friendlychat.models;
 
 public class FriendlyMessage {
-    private String uName;
-    private String text;
-    private String photoUrl;
+    String message;
+    long msgTime;
+    String uId;
 
-    public FriendlyMessage(String uName, String text, String photoUrl) {
-        this.uName = uName;
-        this.text = text;
-        this.photoUrl = photoUrl;
+    public FriendlyMessage(String message, String uId,long msgTime) {
+        this.message = message;
+        this.msgTime = msgTime;
+        this.uId = uId;
     }
 
-    public String getuName() {
-        return uName;
+    public FriendlyMessage(String message, String uId) {
+        this.message = message;
+        this.uId = uId;
     }
 
-    public void setuName(String uName) {
-        this.uName = uName;
+    public String getMessage() {
+        return message;
     }
 
-    public String getText() {
-        return text;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public long getMsgTime() {
+        return msgTime;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public void setMsgTime(long msgTime) {
+        this.msgTime = msgTime;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
+    }
+
+    public FriendlyMessage(){
+
     }
 }

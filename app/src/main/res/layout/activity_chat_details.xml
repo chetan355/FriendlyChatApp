@@ -61,10 +61,11 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatrecycler"
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linear"
-        android:background="@color/chatBack"
         android:layout_below="@+id/toolbar"/>
 
     <LinearLayout
@@ -81,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="2dp"
             android:layout_marginLeft="8dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="2dp"
@@ -94,7 +96,7 @@
             android:textColorHint="#989797" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/send_btn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="5dp"
