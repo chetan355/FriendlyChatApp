@@ -10,12 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import com.example.region.friendlychat.R;
 import com.example.region.friendlychat.adapter.FriendsAdapter;
 import com.example.region.friendlychat.databinding.FragmentFriendsBinding;
 import com.example.region.friendlychat.models.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,8 +27,10 @@ public class FriendsFragment extends Fragment {
     FragmentFriendsBinding binding;
     ArrayList<User> usersList = new ArrayList<>();
     FirebaseDatabase database;
+    FirebaseAuth auth;
     FriendsAdapter adapter;
     ProgressDialog dialog;
+    public static String CURRENT_USER = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class FriendsFragment extends Fragment {
         dialog.setTitle("Fetching");
         dialog.setTitle("We're fetching all friends");
         dialog.show();
+
+        auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         database.getReference().child("User").addValueEventListener(new ValueEventListener() {
             @Override
@@ -54,11 +57,13 @@ public class FriendsFragment extends Fragment {
                     User user = dataSnapshot.getValue(User.class);
                     user.setUid(dataSnapshot.getKey());
                     usersList.add(user);
+                    if(user.getUid().equals(auth.getUid())){
+                        CURRENT_USER = user.getUser_name();
+                    }
                 }
                 dialog.dismiss();
                 adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

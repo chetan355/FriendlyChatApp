@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import com.example.region.friendlychat.adapter.MessagesAdapter;
@@ -34,6 +36,8 @@ public class ChatDetailsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
 
+        binding.sendBtn.setEnabled(false);
+
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
 
@@ -50,6 +54,27 @@ public class ChatDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ChatDetailsActivity.this, MainActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        binding.edtMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().trim().length()>0){
+                    binding.sendBtn.setEnabled(true);
+                }else{
+                    binding.sendBtn.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
         final String senderRoom = senderId + receiverId;

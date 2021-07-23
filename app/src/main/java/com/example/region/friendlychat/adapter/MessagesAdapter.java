@@ -67,9 +67,8 @@ public class MessagesAdapter extends RecyclerView.Adapter{
 //        Log.d("DEBUG",message.getMessage());
         long unix = message.getMsgTime();
         Log.d("DEBUG",""+unix);
-        Date date = new Date(unix*1000L);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String formatted = sdf.format(date);
+        String formatted = sdf.format(new Date(unix*1000));
         if(holder.getClass()==SenderViewHolder.class){
             ((SenderViewHolder) holder).sender_txt.setText(message.getMessage());
             ((SenderViewHolder) holder).sender_time.setText(formatted);
@@ -78,7 +77,6 @@ public class MessagesAdapter extends RecyclerView.Adapter{
             ((ReceiverViewHolder)holder).recei_txt.setText(message.getMessage());
         }
     }
-
     @Override
     public int getItemCount() {
         return messages.size();
