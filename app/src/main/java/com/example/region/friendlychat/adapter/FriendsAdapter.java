@@ -44,7 +44,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
         User user = users.get(position);
         Picasso.get().load(user.getProfile_pic()).placeholder(R.drawable.user).into(holder.uProfile);
         holder.uName.setText(user.getUser_name());
-        holder.uStatus.setText(user.getStatus());
         holder.user_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,13 +60,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
     }
 
     class FriendsViewHolder extends RecyclerView.ViewHolder{
-        TextView uName,uStatus;
+        TextView uName;
         ImageView uProfile;
         LinearLayout user_item;
         public FriendsViewHolder(@NonNull View itemView) {
             super(itemView);
             uName = itemView.findViewById(R.id.txtUsername);
-            uStatus = itemView.findViewById(R.id.txtUserStatus);
             uProfile = itemView.findViewById(R.id.profile_image);
             user_item = itemView.findViewById(R.id.user_item);
         }

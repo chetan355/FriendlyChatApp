@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.region.friendlychat.R;
 import com.example.region.friendlychat.models.FriendlyMessage;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
@@ -27,6 +28,7 @@ import java.util.TimeZone;
 
 public class MessagesAdapter extends RecyclerView.Adapter{
     ArrayList<FriendlyMessage> messages;
+    GoogleSignInClient googleSignInClient;
     Context context;
     int SENDER_VIEW_TYPE=1;
     int RECEIVER_VIEW_TYPE=2;

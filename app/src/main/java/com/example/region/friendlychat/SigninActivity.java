@@ -3,9 +3,17 @@ package com.example.region.friendlychat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -56,7 +64,6 @@ public class SigninActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         if(auth.getCurrentUser()!=null){
             Intent intent = new Intent(SigninActivity.this,MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -65,27 +72,35 @@ public class SigninActivity extends AppCompatActivity {
         binding.btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
-                auth.signInWithEmailAndPassword(binding.edtEmail.getText().toString(), binding.edtPassword.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>(){
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                dialog.dismiss();
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(SigninActivity.this,"Login successful",Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(SigninActivity.this, MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(SigninActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                if(!isConnected(SigninActivity.this)){
+                    showDialogBuilder();
+                }
+                if(isValidated()) {
+                    dialog.show();
+                    auth.signInWithEmailAndPassword(binding.edtEmail.getText().toString(), binding.edtPassword.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    dialog.dismiss();
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(SigninActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    } else {
+                                        //                                    Toast.makeText(SigninActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
         binding.btnGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!isConnected(SigninActivity.this)){
+                    showDialogBuilder();
+                }
                 signIn();
             }
         });
@@ -98,11 +113,54 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
     }
+
+    @SuppressLint("ShowToast")
+    private boolean isValidated() {
+        boolean isVal=false;
+        if(binding.edtEmail.getText().toString().trim().equals("")){
+            Toast.makeText(SigninActivity.this,"Please enter email",Toast.LENGTH_SHORT);
+        }
+        else if(binding.edtPassword.getText().toString().trim().equals("")){
+            Toast.makeText(SigninActivity.this,"Please enter password",Toast.LENGTH_SHORT);
+        }
+        if(!binding.edtEmail.getText().toString().trim().equals("")
+                &&!binding.edtPassword.getText().toString().trim().equals("")){
+            isVal = true;
+        }
+        return isVal;
+
+    }
+
+    private void showDialogBuilder() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Please turn on your internet connection");
+        builder.setCancelable(false)
+        .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+//                startActivity(new Intent(getApplicationContext(),SigninActivity.class));
+            }
+        }).show();
+    }
+
+    static boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if(wifiInfo!=null&&wifiInfo.isConnected() || mobileInfo!=null&&mobileInfo.isConnected()){
+            return true;
+        }else return false;
+    }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

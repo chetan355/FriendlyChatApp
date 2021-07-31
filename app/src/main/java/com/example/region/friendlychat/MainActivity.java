@@ -18,11 +18,15 @@ import android.view.View;
 
 import com.example.region.friendlychat.adapter.FragmentAdapter;
 import com.example.region.friendlychat.databinding.ActivityMainBinding;
+import com.example.region.friendlychat.fragments.FriendsFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     FirebaseAuth auth;
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         //toolbar color :
         Drawable unwrappedDrawable = AppCompatResources.getDrawable(this, R.drawable.appbar);
         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
-        DrawableCompat.setTint(wrappedDrawable, Color.rgb(239, 108, 0));
+        DrawableCompat.setTint(wrappedDrawable, Color.rgb(106, 207, 143));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setElevation(0);
         actionBar.setBackgroundDrawable(wrappedDrawable);
@@ -51,15 +55,27 @@ public class MainActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.main_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.logout){
-            auth.signOut();
-            Intent intent = new Intent(MainActivity.this,SigninActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+        switch (item.getItemId()){
+            case R.id.logout:
+                auth.signOut();
+                Intent intent = new Intent(MainActivity.this,SigninActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
+            case R.id.profile:
+                Intent intent1 = new Intent(MainActivity.this,ProfileActivity.class);
+                String username = FriendsFragment.CURRENT_USER;
+                intent1.putExtra("user",username);
+                startActivity(intent1);
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

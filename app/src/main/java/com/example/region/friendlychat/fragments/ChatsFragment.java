@@ -105,4 +105,5 @@ public class ChatsFragment extends Fragment {
         });
         return binding.getRoot();
     }
+
 }

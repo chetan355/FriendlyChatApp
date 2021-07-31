@@ -105,13 +105,13 @@
                 app:cornerRadius="4dp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Sign Up With Phone"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+<!--        <TextView-->
+<!--            android:id="@+id/txtPhone"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Sign Up With Phone"-->
+<!--            android:textColor="@color/colorPrimary"-->
+<!--            android:textSize="18sp" />-->
     </LinearLayout>
 </LinearLayout>

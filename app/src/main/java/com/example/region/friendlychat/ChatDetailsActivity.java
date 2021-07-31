@@ -1,10 +1,12 @@
 package com.example.region.friendlychat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +31,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
     ActivityChatDetailsBinding binding;
     FirebaseDatabase database;
     FirebaseAuth auth;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +39,14 @@ public class ChatDetailsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
 
+        binding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         binding.sendBtn.setEnabled(false);
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -49,20 +59,19 @@ public class ChatDetailsActivity extends AppCompatActivity {
         final String senderId = auth.getUid();
         final String receiverId = user.getUid();
         
-        binding.back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChatDetailsActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+//        binding.back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(ChatDetailsActivity.this, MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         binding.edtMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.toString().trim().length()>0){
@@ -101,6 +110,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                                             messagesList.add(messageModel);
                                         }
                                         adapter.notifyDataSetChanged();
+                                        binding.progressBar.setVisibility(View.GONE);
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
